@@ -1,0 +1,15 @@
+# npm
+node_modules
+package-lock.json
+*.log
+*.gz
+
+# vscode
+.idea/
+.vscode/
+.env
+
+dist/
+
+# orm
+ormconfig.json
