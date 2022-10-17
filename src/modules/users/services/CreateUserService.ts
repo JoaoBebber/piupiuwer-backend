@@ -10,11 +10,12 @@ import IMailProvider from '@shared/container/providers/MailProvider/models/IMail
 import IUsersRepository from '../repositories/IUsersRepository';
 
 interface IRequest {
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  cpf: string;
-  phone: string;
+  about: string;
   password: string;
+  username: string;
 }
 
 @injectable()
@@ -31,35 +32,38 @@ export default class CreateUserService {
   ) { }
 
   public async execute({
-    cpf, email, name, password, phone,
+    first_name, last_name, email, about, password, username,
   }: IRequest): Promise<Users> {
-    const userAlreadyExists = await this.usersRepository.findByEmailPhoneOrCpf(email, phone, cpf);
+    const userAlreadyExists = await this.usersRepository.findByEmailOrUsername(email, username);
 
-    if (userAlreadyExists) throw new AppError('User with same name, phone or cpf already exists');
+    if (userAlreadyExists) throw new AppError('User with same email or username already exists');
 
     const hashedPassword = await this.hashProvider.generateHash(password);
 
     const user = this.usersRepository.create({
-      name,
+      first_name,
+      last_name,
       email: email.toLowerCase(),
-      cpf,
+      about,
       password: hashedPassword,
-      phone,
+      username,
     });
 
-    const templateDataFile = path.resolve(__dirname, '..', 'views', 'create_account.hbs');
+    // const templateDataFile = path.resolve(__dirname, '..', 'views', 'create_account.hbs');
 
-    await this.mailProvider.sendMail({
-      to: {
-        name,
-        email,
-      },
-      subject: 'Criação de conta',
-      templateData: {
-        file: templateDataFile,
-        variables: { name },
-      },
-    });
+    // const name = first_name + last_name;
+
+    // await this.mailProvider.sendMail({
+    //   to: {
+    //     name,
+    //     email,
+    //   },
+    //   subject: 'Criação de conta',
+    //   templateData: {
+    //     file: templateDataFile,
+    //     variables: { name },
+    //   },
+    // });
 
     return user;
   }
