@@ -8,16 +8,59 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Users {
+model Comment {
   id         String   @id @default(uuid())
-  first_name String
-  last_name  String
-  email      String   @unique
-  about      String
-  password   String
-  username   String   @unique
+  // Users escalares do comentário relacionais de controle
+  author     User     @relation(fields: [authorId], references: [id])
+  authorId   String
+  // Pius
+  piu        Piu      @relation(fields: [piuId], references: [id])
+  piuId      String
+  content    String
   created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("comments")
+}
+
+model User {
+  // Atributos escalares do usuário
+  id           String    @id @default(uuid())
+  first_name   String
+  last_name    String
+  email        String    @unique
+  username     String    @unique
+  password     String
+  about        String?
+  // Atributos relacionais do usuário
+  // Users
+  followedBy   User[]    @relation("UserFollows")
+  following    User[]    @relation("UserFollows")
+  // Pius
+  pius         Piu[]     @relation("Authorship")
+  likedPius    Piu[]     @relation("Likes")
+  favoritePius Piu[]     @relation("Favorites")
+  // Comments
+  comments     Comment[]
+  // Atributos de controle do usuário
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
 
   @@map("users")
+}
+
+model Piu {
+  id          String    @id @default(uuid())
+  // Users escalares da postagem (piu) relacionais de controle
+  author      User      @relation("Authorship", fields: [authorId], references: [id])
+  authorId    String
+  likedBy     User[]    @relation("Likes")
+  favoritedBy User[]    @relation("Favorites")
+  // Comments
+  comments    Comment[]
+  content     String
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  @@map("pius")
 }

@@ -1,0 +1,38 @@
+model Piu {
+  // Atributos escalares da postagem (piu)
+  id      String @id @default(uuid())
+  content String
+
+  // Atributos relacionais da postagem
+  // Users
+  author      User   @relation("Authorship", fields: [authorId], references: [id])
+  authorId    String
+  likedBy     User[] @relation("Likes")
+  favoritedBy User[] @relation("Favorites")
+
+  // Comments
+  comments Comment[]
+
+  // Atributos de controle da postagem
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("pius")
+}
+
+model User {
+  id String @id @default(uuid())
+
+  // Pius
+  pius         Piu[] @relation("Authorship")
+  likedPius    Piu[] @relation("Likes")
+  favoritePius Piu[] @relation("Favorites")
+}
+
+model Comment {
+  id String @id @default(uuid())
+
+  // Pius
+  piu   Piu    @relation(fields: [piuId], references: [id])
+  piuId String
+}
