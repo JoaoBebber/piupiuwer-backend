@@ -11,6 +11,18 @@ export default class UsersRepository implements IUsersRepository {
     this.ormRepository = prisma.user;
   }
 
+  public async create(data: ICreateUserDTO): Promise<User> {
+    const user = await this.ormRepository.create({ data });
+
+    return user;
+  }
+
+  public async list(): Promise<User[]> {
+    const users = await this.ormRepository.findMany();
+
+    return users;
+  }
+
   public async findByEmailWithRelations(email: string): Promise<User | null> {
     const user = await this.ormRepository.findFirst({
       where: { email },
@@ -23,12 +35,6 @@ export default class UsersRepository implements IUsersRepository {
     const user = await this.ormRepository.findFirst({
       where: { OR: [{ email }, { username }] },
     });
-
-    return user;
-  }
-
-  public async create(data: ICreateUserDTO): Promise<User> {
-    const user = await this.ormRepository.create({ data });
 
     return user;
   }
