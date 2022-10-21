@@ -2,11 +2,13 @@ import { Router } from 'express';
 
 import UsersController from '../controller/UsersController';
 
-const usersRoutes = Router();
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
+
+const usersRouter = Router();
 
 const usersController = new UsersController();
 
-usersRoutes.post('/register', usersController.create);
-usersRoutes.get('/', usersController.list);
+usersRouter.post('/register', usersController.create);
+usersRouter.get('/', ensureAuthenticated, usersController.list);
 
-export default usersRoutes;
+export default usersRouter;
