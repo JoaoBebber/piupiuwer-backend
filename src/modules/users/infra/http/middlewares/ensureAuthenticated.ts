@@ -14,7 +14,9 @@ function ensureAuthenticated(
 
   if (!authHeader) throw new AppError('JWT token is missing.', 401);
 
-  const [, token] = authHeader.split(' ');
+  const [word, token] = authHeader.split(' ');
+
+  if (word !== 'Bearer') throw new AppError('Wrong authentication word.', 401);
 
   try {
     const decoded = verify(token, auth.jwt.secret as Secret);
