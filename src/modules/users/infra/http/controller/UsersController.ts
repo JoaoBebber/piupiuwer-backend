@@ -29,4 +29,12 @@ export default class UserController {
 
     return res.status(201).json(userWithoutPassword);
   }
+
+  public async list(req: Request, res: Response): Promise<Response> {
+    const listUsers = container.resolve(ListUsersService);
+
+    const users = await listUsers.execute();
+
+    return res.json(users || null);
+  }
 }
