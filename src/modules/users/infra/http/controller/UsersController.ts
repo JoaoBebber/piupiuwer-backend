@@ -32,9 +32,11 @@ export default class UserController {
   }
 
   public async list(req: Request, res: Response): Promise<Response> {
+    const { username } = req.query;
+
     const listUsers = container.resolve(ListUsersService);
 
-    const users = await listUsers.execute();
+    const users = await listUsers.execute(username as string);
 
     return res.json(users);
   }
