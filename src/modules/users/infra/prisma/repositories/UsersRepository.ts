@@ -38,4 +38,27 @@ export default class UsersRepository implements IUsersRepository {
 
     return user;
   }
+
+  public async findById(id: string): Promise<User | null> {
+    const user = await this.ormRepository.findUnique({
+      where: { id },
+    });
+
+    return user;
+  }
+
+  public async follow(userId: string, followingId: string): Promise<User | null> {
+    const followed = await this.ormRepository.update({
+      where: { id: userId },
+      data: {
+        following: {
+          connect: {
+            id: followingId,
+          },
+        },
+      },
+    });
+
+    return followed;
+  }
 }

@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import CreateUserService from '@modules/users/services/CreateUserService';
 import ListUsersService from '@modules/users/services/ListUsersService';
+import FollowUserService from '@modules/users/services/FollowUserService';
 
 export default class UserController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -46,7 +47,10 @@ export default class UserController {
 
     const followUser = container.resolve(FollowUserService);
 
-    const followedUser = await followUser.execute(followingId as string);
+    const followedUser = await followUser.execute({
+      userId: req.user.id,
+      followingId: followingId as string,
+    });
 
     return res.json(followedUser);
   }
