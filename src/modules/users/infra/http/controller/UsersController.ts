@@ -25,8 +25,8 @@ export default class UserController {
       username,
     });
 
-    user.password = '###';
+    const { password: _, ...userWithoutPassword } = user;
 
-    return res.status(201).json(user);
+    return res.status(201).json(userWithoutPassword);
   }
 }

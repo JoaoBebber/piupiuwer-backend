@@ -1,21 +1,21 @@
 import { inject, injectable } from 'tsyringe';
-import path from 'path';
+// import path from 'path';
 
-import { Users } from '@prisma/client';
+import { User } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
-
 import IHashProvider from '@shared/container/providers/HashProvider/models/IHashProvider';
 import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
+
 import IUsersRepository from '../repositories/IUsersRepository';
 
 interface IRequest {
   first_name: string;
   last_name: string;
   email: string;
-  about: string;
-  password: string;
   username: string;
+  password: string;
+  about?: string;
 }
 
 @injectable()
@@ -32,21 +32,31 @@ export default class CreateUserService {
   ) { }
 
   public async execute({
-    first_name, last_name, email, about, password, username,
-  }: IRequest): Promise<Users> {
-    const userAlreadyExists = await this.usersRepository.findByEmailOrUsername(email, username);
+    first_name, last_name, email, username, password, about,
+  }: IRequest): Promise<User> {
+    const userAlreadyExists = await this.usersRepository.findByEmailOrUsername(
+      email, username,
+    );
 
-    if (userAlreadyExists) throw new AppError('User with same email or username already exists');
+    if (userAlreadyExists) {
+      throw new AppError('User with same email or username already exists');
+    }
 
     const hashedPassword = await this.hashProvider.generateHash(password);
 
-    const user = this.usersRepository.create({
+    const user = this.usersRepository.create(about ? {
       first_name,
       last_name,
       email: email.toLowerCase(),
-      about,
-      password: hashedPassword,
       username,
+      password: hashedPassword,
+      about,
+    } : {
+      first_name,
+      last_name,
+      email: email.toLowerCase(),
+      username,
+      password: hashedPassword,
     });
 
     // const templateDataFile = path.resolve(__dirname, '..', 'views', 'create_account.hbs');
