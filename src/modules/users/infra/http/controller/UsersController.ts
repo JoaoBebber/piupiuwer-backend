@@ -40,4 +40,14 @@ export default class UserController {
 
     return res.json(users);
   }
+
+  public async follow(req: Request, res: Response): Promise<Response> {
+    const { followingId } = req.body;
+
+    const followUser = container.resolve(FollowUserService);
+
+    const followedUser = await followUser.execute(followingId as string);
+
+    return res.json(followedUser);
+  }
 }
