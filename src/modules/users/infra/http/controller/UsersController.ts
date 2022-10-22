@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import CreateUserService from '@modules/users/services/CreateUserService';
-import ListUsersService from '@modules/users/services/ListUsersService';
 import FollowUserService from '@modules/users/services/FollowUserService';
+import ListUsersService from '@modules/users/services/ListUsersService';
 
 export default class UserController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -32,16 +32,6 @@ export default class UserController {
     return res.status(201).json(userWithoutPassword);
   }
 
-  public async list(req: Request, res: Response): Promise<Response> {
-    const { username } = req.query;
-
-    const listUsers = container.resolve(ListUsersService);
-
-    const users = await listUsers.execute(username as string);
-
-    return res.json(users);
-  }
-
   public async follow(req: Request, res: Response): Promise<Response> {
     const { followingId } = req.body;
 
@@ -53,5 +43,15 @@ export default class UserController {
     });
 
     return res.json(followedUser);
+  }
+
+  public async list(req: Request, res: Response): Promise<Response> {
+    const { username } = req.query;
+
+    const listUsers = container.resolve(ListUsersService);
+
+    const users = await listUsers.execute(username as string);
+
+    return res.json(users);
   }
 }

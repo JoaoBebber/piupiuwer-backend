@@ -22,9 +22,7 @@ class CreatePiuService {
       throw new AppError('Invalid Piu length.');
     }
 
-    const piu = await this.piusRepository.create({ authorId, content });
-
-    return piu;
+    return this.piusRepository.create({ authorId, content });
   }
 }
 

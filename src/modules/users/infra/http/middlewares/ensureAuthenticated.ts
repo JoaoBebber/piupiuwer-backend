@@ -23,9 +23,7 @@ function ensureAuthenticated(
 
     const { sub } = decoded as JwtPayload;
 
-    request.user = {
-      id: sub as string,
-    };
+    request.user = { id: sub as string };
 
     return next();
   } catch (err) {

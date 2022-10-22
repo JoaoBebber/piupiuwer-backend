@@ -1,6 +1,9 @@
 import { Prisma, Comment } from '@prisma/client';
 
+// Data Transfer Objects
 import ICreateCommentDTO from '@modules/comments/dtos/ICreateCommentDTO';
+
+// Repositories
 import ICommentsRepository from '@modules/comments/repositories/ICommentsRepository';
 
 import prisma from '@shared/infra/prisma/client';
@@ -14,9 +17,7 @@ class CommentsRepository implements ICommentsRepository {
 
   // General Methods
   public async create(data: ICreateCommentDTO): Promise<Comment> {
-    const comment = await this.ormRepository.create({ data });
-
-    return comment;
+    return this.ormRepository.create({ data });
   }
 }
 

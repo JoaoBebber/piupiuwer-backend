@@ -1,5 +1,6 @@
 import { Piu } from '@prisma/client';
 
+// Data Transfer Objects
 import ICreatePiuDTO from '../dtos/ICreatePiuDTO';
 import IFavoritePiuDTO from '../dtos/IFavoritePiuDTO';
 import ILikePiuDTO from '../dtos/ILikePiuDTO';

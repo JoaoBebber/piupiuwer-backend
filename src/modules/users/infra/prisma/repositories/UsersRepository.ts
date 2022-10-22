@@ -1,7 +1,10 @@
 import { Prisma, User } from '@prisma/client';
 
+// Data Transfer Objects
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import IFindUserDTO from '@modules/users/dtos/IFindUserDTO';
+
+// Repositories
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 
 import prisma from '@shared/infra/prisma/client';
@@ -14,9 +17,7 @@ export default class UsersRepository implements IUsersRepository {
   }
 
   public async create(data: ICreateUserDTO): Promise<User> {
-    const user = await this.ormRepository.create({ data });
-
-    return user;
+    return this.ormRepository.create({ data });
   }
 
   public async ensureFollowed(userId: string, followingId: string): Promise<boolean> {
@@ -48,7 +49,7 @@ export default class UsersRepository implements IUsersRepository {
   }
 
   public async follow(userId: string, followingId: string): Promise<User | null> {
-    const followed = await this.ormRepository.update({
+    return this.ormRepository.update({
       where: { id: userId },
       data: {
         following: {
@@ -58,18 +59,14 @@ export default class UsersRepository implements IUsersRepository {
         },
       },
     });
-
-    return followed;
   }
 
   public async list(): Promise<User[]> {
-    const users = await this.ormRepository.findMany();
-
-    return users;
+    return this.ormRepository.findMany();
   }
 
   public async unfollow(userId: string, followingId: string): Promise<User> {
-    const unfollowed = await this.ormRepository.update({
+    return this.ormRepository.update({
       where: { id: userId },
       data: {
         following: {
@@ -79,7 +76,5 @@ export default class UsersRepository implements IUsersRepository {
         },
       },
     });
-
-    return unfollowed;
   }
 }

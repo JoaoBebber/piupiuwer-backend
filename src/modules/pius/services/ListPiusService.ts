@@ -11,9 +11,7 @@ class ListPiusService {
   ) {}
 
   public async execute(): Promise<Piu[]> {
-    const pius = await this.piusRepository.list();
-
-    return pius;
+    return this.piusRepository.list();
   }
 }
 

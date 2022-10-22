@@ -2,9 +2,9 @@ import { User } from '@prisma/client';
 import { inject, injectable } from 'tsyringe';
 // import path from 'path';
 
-import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/container/providers/HashProvider/models/IHashProvider';
 import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
+import AppError from '@shared/errors/AppError';
 
 import IUsersRepository from '../repositories/IUsersRepository';
 
