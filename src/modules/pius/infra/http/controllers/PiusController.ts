@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import CreatePiuService from '@modules/pius/services/CreatePiuService';
+import FavoritePiuService from '@modules/pius/services/FavoritePiuService';
 import LikePiuService from '@modules/pius/services/LikePiuService';
 import ListPiusService from '@modules/pius/services/ListPiusService';
 
@@ -14,6 +15,19 @@ class PiusController {
     const piu = await createPiu.execute({ authorId: req.user.id, content });
 
     return res.status(201).json(piu);
+  }
+
+  public async favorite(req: Request, res: Response): Promise<Response> {
+    const { piuId } = req.body;
+
+    const favoritePiu = container.resolve(FavoritePiuService);
+
+    const piu = await favoritePiu.execute({
+      piuId,
+      userId: req.user.id,
+    });
+
+    return res.json(piu);
   }
 
   public async like(req: Request, res: Response): Promise<Response> {
