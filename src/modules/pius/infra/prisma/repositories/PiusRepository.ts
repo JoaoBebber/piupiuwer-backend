@@ -1,11 +1,14 @@
 import { Prisma, Piu } from '@prisma/client';
 
+// Data Transfer Objects
 import ICreatePiuDTO from '@modules/pius/dtos/ICreatePiuDTO';
 import IFavoritePiuDTO from '@modules/pius/dtos/IFavoritePiuDTO';
 import ILikePiuDTO from '@modules/pius/dtos/ILikePiuDTO';
 
+// Repositories
 import IPiusRepository from '@modules/pius/repositories/IPiusRepository';
 
+// Prisma Client
 import prisma from '@shared/infra/prisma/client';
 
 class piusRepository implements IPiusRepository {
@@ -17,23 +20,21 @@ class piusRepository implements IPiusRepository {
 
   // General Methods
   public async create(data: ICreatePiuDTO): Promise<Piu> {
-    const piu = await this.ormRepository.create({ data });
+    return this.ormRepository.create({ data });
+  }
 
-    return piu;
+  public async delete(piuId: string): Promise<Piu> {
+    return this.ormRepository.delete({ where: { id: piuId } });
   }
 
   public async findById(id: string): Promise<Piu | null> {
-    const piu = await this.ormRepository.findUnique({
+    return this.ormRepository.findUnique({
       where: { id },
     });
-
-    return piu;
   }
 
   public async list(): Promise<Piu[]> {
-    const pius = await this.ormRepository.findMany();
-
-    return pius;
+    return this.ormRepository.findMany();
   }
 
   // Favorite Methods
@@ -51,7 +52,7 @@ class piusRepository implements IPiusRepository {
   }
 
   public async favorite({ piuId, userId }: IFavoritePiuDTO): Promise<Piu> {
-    const piu = await this.ormRepository.update({
+    return this.ormRepository.update({
       where: { id: piuId },
       data: {
         favoritedBy: {
@@ -61,12 +62,10 @@ class piusRepository implements IPiusRepository {
         },
       },
     });
-
-    return piu;
   }
 
   public async unfavorite({ piuId, userId }: IFavoritePiuDTO): Promise<Piu> {
-    const piu = await this.ormRepository.update({
+    return this.ormRepository.update({
       where: { id: piuId },
       data: {
         favoritedBy: {
@@ -76,8 +75,6 @@ class piusRepository implements IPiusRepository {
         },
       },
     });
-
-    return piu;
   }
 
   // Like Methods
@@ -92,7 +89,7 @@ class piusRepository implements IPiusRepository {
   }
 
   public async like({ piuId, userId }: ILikePiuDTO): Promise<Piu> {
-    const piu = await this.ormRepository.update({
+    return this.ormRepository.update({
       where: { id: piuId },
       data: {
         likedBy: {
@@ -102,12 +99,10 @@ class piusRepository implements IPiusRepository {
         },
       },
     });
-
-    return piu;
   }
 
   public async unlike({ piuId, userId }: ILikePiuDTO): Promise<Piu> {
-    const piu = await this.ormRepository.update({
+    return this.ormRepository.update({
       where: { id: piuId },
       data: {
         likedBy: {
@@ -117,8 +112,6 @@ class piusRepository implements IPiusRepository {
         },
       },
     });
-
-    return piu;
   }
 }
 

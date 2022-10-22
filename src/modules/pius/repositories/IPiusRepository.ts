@@ -1,5 +1,6 @@
 import { Piu } from '@prisma/client';
 
+// Data Transfer Objects
 import ICreatePiuDTO from '../dtos/ICreatePiuDTO';
 import IFavoritePiuDTO from '../dtos/IFavoritePiuDTO';
 import ILikePiuDTO from '../dtos/ILikePiuDTO';
@@ -7,6 +8,7 @@ import ILikePiuDTO from '../dtos/ILikePiuDTO';
 interface IPiusRepository {
   // General Methods
   create(data: ICreatePiuDTO): Promise<Piu>;
+  delete(piuId: string): Promise<Piu>;
   findById(id: string): Promise<Piu | null>;
   list(): Promise<Piu[]>;
 

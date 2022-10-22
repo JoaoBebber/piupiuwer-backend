@@ -6,11 +6,11 @@ import auth from '@config/auth';
 import AppError from '@shared/errors/AppError';
 
 function ensureAuthenticated(
-  request: Request,
-  response: Response,
+  req: Request,
+  _res: Response,
   next: NextFunction,
 ): void {
-  const authHeader = request.headers.authorization;
+  const authHeader = req.headers.authorization;
 
   if (!authHeader) throw new AppError('JWT token is missing.', 401);
 
@@ -23,9 +23,7 @@ function ensureAuthenticated(
 
     const { sub } = decoded as JwtPayload;
 
-    request.user = {
-      id: sub as string,
-    };
+    req.user = { id: sub as string };
 
     return next();
   } catch (err) {

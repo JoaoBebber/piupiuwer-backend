@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
+// Services
 import CreateCommentService from '@modules/comments/services/CreateCommentService';
 
 class CommentsController {
+  // General Requests
   public async create(req: Request, res: Response): Promise<Response> {
     const { piuId, content } = req.body;
 
-    const createComment = container.resolve(CreateCommentService);
-
-    const comment = await createComment.execute({
+    const comment = await container.resolve(CreateCommentService).execute({
       authorId: req.user.id,
       piuId,
       content,

@@ -31,13 +31,11 @@ class CreateCommentService {
       throw new AppError('Invaild comment length.');
     }
 
-    const comment = await this.commentsRepository.create({
+    return this.commentsRepository.create({
       authorId,
       piuId,
       content,
     });
-
-    return comment;
   }
 }
 
