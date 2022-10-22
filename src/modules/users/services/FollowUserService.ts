@@ -10,6 +10,11 @@ interface IRequest {
   followingId: string;
 }
 
+interface IResponse {
+  status: 'Followed' | 'Unfollowed' | 'Not found';
+  user: Omit<User, 'password'> | null;
+}
+
 @injectable()
 class FollowUserService {
   constructor(
@@ -17,16 +22,35 @@ class FollowUserService {
     private usersRepository: IUsersRepository,
   ) {}
 
-  public async execute({ userId, followingId }: IRequest): Promise<Omit<User, 'password'> | null> {
-    const user = await this.usersRepository.follow(userId, followingId);
-
-    if (!user) throw new AppError('User not found.', 404);
+  public async execute({ userId, followingId }: IRequest): Promise<IResponse> {
+    let status: 'Followed' | 'Unfollowed' | 'Not found';
 
     const followedUser = await this.usersRepository.findById(followingId);
 
+    if (!followedUser) {
+      status = 'Not found';
+
+      throw new AppError('User not found.', 404);
+    }
+
+    const stillFollowing = await this.usersRepository.ensureFollowed(
+      userId,
+      followingId,
+    );
+
+    if (stillFollowing) {
+      status = 'Unfollowed';
+
+      await this.usersRepository.unfollow(userId, followingId);
+    } else {
+      status = 'Followed';
+
+      await this.usersRepository.follow(userId, followingId);
+    }
+
     const { password: _, ...followedUserWithoutPassword } = followedUser as User;
 
-    return followedUserWithoutPassword;
+    return { status, user: followedUserWithoutPassword };
   }
 }
 

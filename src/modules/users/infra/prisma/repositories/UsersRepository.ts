@@ -17,23 +17,29 @@ export default class UsersRepository implements IUsersRepository {
     return user;
   }
 
-  public async list(): Promise<User[]> {
-    const users = await this.ormRepository.findMany();
+  public async ensureFollowed(userId: string, followingId: string): Promise<boolean> {
+    const followedUsers = await this.ormRepository.findUnique({
+      where: { id: userId },
+    }).following();
 
-    return users;
-  }
+    if (followedUsers.find((user) => user.id === followingId)) {
+      return true;
+    }
 
-  public async findByEmailWithRelations(email: string): Promise<User | null> {
-    const user = await this.ormRepository.findFirst({
-      where: { email },
-    });
-
-    return user;
+    return false;
   }
 
   public async findByEmailOrUsername(email: string, username: string): Promise<User | null> {
     const user = await this.ormRepository.findFirst({
       where: { OR: [{ email }, { username }] },
+    });
+
+    return user;
+  }
+
+  public async findByEmailWithRelations(email: string): Promise<User | null> {
+    const user = await this.ormRepository.findFirst({
+      where: { email },
     });
 
     return user;
@@ -60,5 +66,26 @@ export default class UsersRepository implements IUsersRepository {
     });
 
     return followed;
+  }
+
+  public async list(): Promise<User[]> {
+    const users = await this.ormRepository.findMany();
+
+    return users;
+  }
+
+  public async unfollow(userId: string, followingId: string): Promise<User> {
+    const unfollowed = await this.ormRepository.update({
+      where: { id: userId },
+      data: {
+        following: {
+          disconnect: {
+            id: followingId,
+          },
+        },
+      },
+    });
+
+    return unfollowed;
   }
 }
