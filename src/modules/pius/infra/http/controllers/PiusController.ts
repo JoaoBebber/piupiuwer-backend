@@ -1,12 +1,15 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
+// Services
 import CreatePiuService from '@modules/pius/services/CreatePiuService';
+import DeletePiuService from '@modules/pius/services/DeletePiuService';
 import FavoritePiuService from '@modules/pius/services/FavoritePiuService';
 import LikePiuService from '@modules/pius/services/LikePiuService';
 import ListPiusService from '@modules/pius/services/ListPiusService';
 
 class PiusController {
+  // General Requests
   public async create(req: Request, res: Response): Promise<Response> {
     const { content } = req.body;
 
@@ -17,6 +20,25 @@ class PiusController {
     return res.status(201).json(piu);
   }
 
+  public async delete(req: Request, res: Response): Promise<Response> {
+    const { piuId } = req.body;
+
+    const deletePiu = container.resolve(DeletePiuService);
+
+    const piu = await deletePiu.execute(piuId);
+
+    return res.json(piu);
+  }
+
+  public async list(_req: Request, res: Response): Promise<Response> {
+    const listPius = container.resolve(ListPiusService);
+
+    const pius = await listPius.execute();
+
+    return res.json(pius);
+  }
+
+  // Favorite Requests
   public async favorite(req: Request, res: Response): Promise<Response> {
     const { piuId } = req.body;
 
@@ -30,6 +52,7 @@ class PiusController {
     return res.json(piu);
   }
 
+  // Like Requests
   public async like(req: Request, res: Response): Promise<Response> {
     const { piuId } = req.body;
 
@@ -41,14 +64,6 @@ class PiusController {
     });
 
     return res.json(piu);
-  }
-
-  public async list(_req: Request, res: Response): Promise<Response> {
-    const listPius = container.resolve(ListPiusService);
-
-    const pius = await listPius.execute();
-
-    return res.json(pius);
   }
 }
 
