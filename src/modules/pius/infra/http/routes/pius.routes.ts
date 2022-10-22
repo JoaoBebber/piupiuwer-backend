@@ -8,6 +8,7 @@ const piusController = new PiusController();
 
 // General Requests
 piusRouter.post('/', piusController.create);
+piusRouter.delete('/', piusController.delete);
 piusRouter.get('/', piusController.list);
 
 // Favorite Requests
