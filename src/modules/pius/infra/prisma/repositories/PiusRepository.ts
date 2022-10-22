@@ -17,6 +17,12 @@ class piusRepository implements IPiusRepository {
 
     return piu;
   }
+
+  public async list(): Promise<Piu[]> {
+    const pius = await this.ormRepository.findMany();
+
+    return pius;
+  }
 }
 
 export default piusRepository;
