@@ -24,9 +24,7 @@ export default class UsersRepository implements IUsersRepository {
       where: { id: userId },
     }).following();
 
-    if (followedUsers.find((user) => user.id === followingId)) {
-      return true;
-    }
+    if (followedUsers.find((user) => user.id === followingId)) return true;
 
     return false;
   }
