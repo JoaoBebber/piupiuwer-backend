@@ -8,5 +8,6 @@ const piusController = new PiusController();
 
 piusRouter.post('/', piusController.create);
 piusRouter.get('/', piusController.list);
+piusRouter.post('/like', piusController.like);
 
 export default piusRouter;
