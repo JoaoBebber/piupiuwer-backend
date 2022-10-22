@@ -1,11 +1,15 @@
 import { User } from '@prisma/client';
 
 import ICreateUserDTO from '../dtos/ICreateUserDTO';
+import IFindUserDTO from '../dtos/IFindUserDTO';
 
 interface IUsersRepository {
-  findByEmailWithRelations(email: string): Promise<User | null>;
-  findByEmailOrUsername(email: string, username: string): Promise<User | null>;
   create(data: ICreateUserDTO): Promise<User>;
+  ensureFollowed(userId: string, followingId: string): Promise<boolean>;
+  findBy(data: IFindUserDTO): Promise<User | null>;
+  follow(userId: string, followingId: string): Promise<User | null>;
+  list(): Promise<User[]>;
+  unfollow(userId: string, followingId: string): Promise<User>;
 }
 
 export default IUsersRepository;

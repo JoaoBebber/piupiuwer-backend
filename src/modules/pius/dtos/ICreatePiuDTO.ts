@@ -1,6 +1,6 @@
 interface ICreatePiuDTO {
-  content: string;
   authorId: string;
+  content: string;
 }
 
 export default ICreatePiuDTO;
