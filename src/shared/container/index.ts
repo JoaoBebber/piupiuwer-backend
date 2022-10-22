@@ -8,6 +8,9 @@ import UsersRepository from '@modules/users/infra/prisma/repositories/UsersRepos
 // Pius
 import IPiusRepository from '@modules/pius/repositories/IPiusRepository';
 import PiusRepository from '@modules/pius/infra/prisma/repositories/PiusRepository';
+// Comments
+import ICommentsRepository from '@modules/comments/repositories/ICommentsRepository';
+import CommentsRepository from '@modules/comments/infra/prisma/repositories/CommentsRepository';
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
@@ -16,4 +19,8 @@ container.registerSingleton<IUsersRepository>(
 container.registerSingleton<IPiusRepository>(
   'PiusRepository',
   PiusRepository,
+);
+container.registerSingleton<ICommentsRepository>(
+  'CommentsRepository',
+  CommentsRepository,
 );
