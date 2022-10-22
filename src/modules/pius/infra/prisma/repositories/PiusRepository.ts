@@ -22,6 +22,10 @@ class piusRepository implements IPiusRepository {
     return this.ormRepository.create({ data });
   }
 
+  public async delete(piuId: string): Promise<Piu> {
+    return this.ormRepository.delete({ where: { id: piuId } });
+  }
+
   public async findById(id: string): Promise<Piu | null> {
     return this.ormRepository.findUnique({
       where: { id },
