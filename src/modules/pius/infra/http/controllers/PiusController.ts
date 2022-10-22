@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 // Services
 import CreatePiuService from '@modules/pius/services/CreatePiuService';
+import DeletePiuService from '@modules/pius/services/DeletePiuService';
 import FavoritePiuService from '@modules/pius/services/FavoritePiuService';
 import LikePiuService from '@modules/pius/services/LikePiuService';
 import ListPiusService from '@modules/pius/services/ListPiusService';
@@ -18,6 +19,16 @@ class PiusController {
     });
 
     return res.status(201).json(piu);
+  }
+
+  public async delete(req: Request, res: Response): Promise<Response> {
+    const { piuId } = req.body;
+
+    const deletePiu = container.resolve(DeletePiuService);
+
+    const piu = await deletePiu.execute(piuId);
+
+    return res.json(piu);
   }
 
   public async list(_req: Request, res: Response): Promise<Response> {

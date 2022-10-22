@@ -8,6 +8,7 @@ import ILikePiuDTO from '../dtos/ILikePiuDTO';
 interface IPiusRepository {
   // General Methods
   create(data: ICreatePiuDTO): Promise<Piu>;
+  delete(piuId: string): Promise<Piu>;
   findById(id: string): Promise<Piu | null>;
   list(): Promise<Piu[]>;
 

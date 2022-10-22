@@ -75,6 +75,95 @@ const piusPaths: OpenAPIV3.PathsObject = {
         },
       },
     },
+    delete: {
+      summary: 'Apagar Piu',
+      description: 'Documentação de como apagar um Piu.',
+      tags: ['Pius'],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      requestBody: {
+        content: {
+          'application/json': {
+            schema: {
+              properties: {
+                piuId: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'OK',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: {
+                      type: 'string',
+                    },
+                    authorId: {
+                      type: 'string',
+                    },
+                    content: {
+                      type: 'string',
+                    },
+                    created_at: {
+                      type: 'string',
+                    },
+                    updated_at: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        401: {
+          description: 'Unauthorized',
+          content: {
+            'application/json': {
+              schema: {
+                properties: {
+                  status: {
+                    type: 'string',
+                  },
+                  message: {
+                    type: 'string',
+                  },
+                },
+              },
+            },
+          },
+        },
+        404: {
+          description: 'Not Found',
+          content: {
+            'application/json': {
+              schema: {
+                properties: {
+                  status: {
+                    type: 'string',
+                  },
+                  message: {
+                    type: 'string',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     get: {
       summary: 'Listar Pius',
       description: 'Documentação de como listar todos os Pius.',
