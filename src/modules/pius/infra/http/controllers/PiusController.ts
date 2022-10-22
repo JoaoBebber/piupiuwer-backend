@@ -24,9 +24,7 @@ class PiusController {
   public async delete(req: Request, res: Response): Promise<Response> {
     const { piuId } = req.body;
 
-    const deletePiu = container.resolve(DeletePiuService);
-
-    const piu = await deletePiu.execute(piuId);
+    const piu = await container.resolve(DeletePiuService).execute(piuId);
 
     return res.json(piu);
   }

@@ -8,6 +8,7 @@ import ILikePiuDTO from '@modules/pius/dtos/ILikePiuDTO';
 // Repositories
 import IPiusRepository from '@modules/pius/repositories/IPiusRepository';
 
+// Prisma Client
 import prisma from '@shared/infra/prisma/client';
 
 class piusRepository implements IPiusRepository {
