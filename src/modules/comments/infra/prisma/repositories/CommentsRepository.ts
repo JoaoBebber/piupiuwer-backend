@@ -6,6 +6,7 @@ import ICreateCommentDTO from '@modules/comments/dtos/ICreateCommentDTO';
 // Repositories
 import ICommentsRepository from '@modules/comments/repositories/ICommentsRepository';
 
+// Prisma Client
 import prisma from '@shared/infra/prisma/client';
 
 class CommentsRepository implements ICommentsRepository {
