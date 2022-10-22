@@ -25,7 +25,7 @@ app.use(express.json());
 
 app.use(routes);
 
-app.get('/teste', (req: Request, res: Response) => {
+app.get('/tests', (req: Request, res: Response) => {
   res.json({ message: 'Hello World' });
 });
 
