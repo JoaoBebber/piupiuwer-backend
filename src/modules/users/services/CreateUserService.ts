@@ -1,7 +1,6 @@
+import { User } from '@prisma/client';
 import { inject, injectable } from 'tsyringe';
 // import path from 'path';
-
-import { User } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/container/providers/HashProvider/models/IHashProvider';
@@ -34,12 +33,18 @@ export default class CreateUserService {
   public async execute({
     first_name, last_name, email, username, password, about,
   }: IRequest): Promise<User> {
-    const userAlreadyExists = await this.usersRepository.findByEmailOrUsername(
-      email, username,
-    );
+    const emailAlreadyExists = await this.usersRepository.findBy({
+      key: 'email',
+      value: email,
+    });
 
-    if (userAlreadyExists) {
-      throw new AppError('User with same email or username already exists');
+    const usernameAlreadyExists = await this.usersRepository.findBy({
+      key: 'username',
+      value: username,
+    });
+
+    if (emailAlreadyExists || usernameAlreadyExists) {
+      throw new AppError('User with same email or username already exists.');
     }
 
     const hashedPassword = await this.hashProvider.generateHash(password);

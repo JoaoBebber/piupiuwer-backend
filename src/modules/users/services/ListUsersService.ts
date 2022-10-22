@@ -14,9 +14,10 @@ class ListUsersService {
 
   public async execute(username: string): Promise<Omit<User, 'password'>[]> {
     if (username) {
-      const user = await this.usersRepository.findByEmailOrUsername(
-        '', username,
-      );
+      const user = await this.usersRepository.findBy({
+        key: 'username',
+        value: username,
+      });
 
       if (!user) throw new AppError('User not found.', 404);
 

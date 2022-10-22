@@ -1,8 +1,10 @@
-import prisma from '@shared/infra/prisma/client';
 import { Prisma, User } from '@prisma/client';
 
-import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
+import IFindUserDTO from '@modules/users/dtos/IFindUserDTO';
+import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+
+import prisma from '@shared/infra/prisma/client';
 
 export default class UsersRepository implements IUsersRepository {
   private ormRepository: Prisma.UserDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
@@ -29,28 +31,22 @@ export default class UsersRepository implements IUsersRepository {
     return false;
   }
 
-  public async findByEmailOrUsername(email: string, username: string): Promise<User | null> {
-    const user = await this.ormRepository.findFirst({
-      where: { OR: [{ email }, { username }] },
-    });
+  public async findBy({ key, value }: IFindUserDTO): Promise<User | null> {
+    if (key === 'email') {
+      return this.ormRepository.findUnique({
+        where: { email: value },
+      });
+    } if (key === 'id') {
+      return this.ormRepository.findUnique({
+        where: { id: value },
+      });
+    } if (key === 'username') {
+      return this.ormRepository.findUnique({
+        where: { username: value },
+      });
+    }
 
-    return user;
-  }
-
-  public async findByEmailWithRelations(email: string): Promise<User | null> {
-    const user = await this.ormRepository.findFirst({
-      where: { email },
-    });
-
-    return user;
-  }
-
-  public async findById(id: string): Promise<User | null> {
-    const user = await this.ormRepository.findUnique({
-      where: { id },
-    });
-
-    return user;
+    return null;
   }
 
   public async follow(userId: string, followingId: string): Promise<User | null> {

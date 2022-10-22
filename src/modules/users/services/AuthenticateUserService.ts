@@ -1,7 +1,6 @@
+import { User } from '@prisma/client';
 import { inject, injectable } from 'tsyringe';
 import { sign } from 'jsonwebtoken';
-
-import { User } from '@prisma/client';
 
 import authConfig from '@config/auth';
 
@@ -31,7 +30,10 @@ export default class AuthenticateUserService {
   ) { }
 
   public async execute({ email, password }: IRequest): Promise<IResponse> {
-    const user = await this.usersRepository.findByEmailWithRelations(email);
+    const user = await this.usersRepository.findBy({
+      key: 'email',
+      value: email,
+    });
 
     if (!user) throw new AppError('Incorrect email/password combination', 401);
 
