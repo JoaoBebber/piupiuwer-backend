@@ -1,8 +1,15 @@
 import { Piu } from '@prisma/client';
 import { inject, injectable } from 'tsyringe';
 
+import AppError from '@shared/errors/AppError';
+
 import ILikePiuDTO from '../dtos/ILikePiuDTO';
 import IPiusRepository from '../repositories/IPiusRepository';
+
+interface IResponse {
+  operation: 'like' | 'unlike';
+  piu: Piu;
+}
 
 @injectable()
 class LikePiuService {
@@ -11,13 +18,26 @@ class LikePiuService {
     private piusRepository: IPiusRepository,
   ) {}
 
-  public async execute({ piuId, userId }: ILikePiuDTO): Promise<Piu> {
-    const piu = await this.piusRepository.like({
-      piuId,
-      userId,
-    });
+  public async execute({ piuId, userId }: ILikePiuDTO): Promise<IResponse> {
+    let operation: 'like' | 'unlike';
 
-    return piu;
+    const piu = await this.piusRepository.findById(piuId);
+
+    if (!piu) throw new AppError('Piu not found.', 404);
+
+    const stillLiked = await this.piusRepository.ensureLiked({ piuId, userId });
+
+    if (stillLiked) {
+      operation = 'unlike';
+
+      await this.piusRepository.unlike({ piuId, userId });
+    } else {
+      operation = 'like';
+
+      await this.piusRepository.like({ piuId, userId });
+    }
+
+    return { operation, piu };
   }
 }
 
