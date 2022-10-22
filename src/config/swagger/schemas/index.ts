@@ -1,7 +1,11 @@
-import exempleSchema from './example';
+import commentsComponent from './commentsComponent';
+import piusComponent from './piusComponent';
+import usersComponent from './usersComponent';
 
 const schema = {
-  ...exempleSchema,
+  ...commentsComponent,
+  ...piusComponent,
+  ...usersComponent,
 };
 
 export default schema;
