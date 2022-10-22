@@ -40,6 +40,23 @@ const commentsPaths: OpenAPIV3.PathsObject = {
             },
           },
         },
+        400: {
+          description: 'Bad Request',
+          content: {
+            'application/json': {
+              schema: {
+                properties: {
+                  status: {
+                    type: 'string',
+                  },
+                  message: {
+                    type: 'string',
+                  },
+                },
+              },
+            },
+          },
+        },
         401: {
           description: 'Unauthorized',
           content: {
