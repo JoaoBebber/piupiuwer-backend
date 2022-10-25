@@ -3,6 +3,7 @@ import { Prisma, User } from '@prisma/client';
 // Data Transfer Objects
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import IFindUserDTO from '@modules/users/dtos/IFindUserDTO';
+import IUpdateAvatarKeyDTO from '@modules/users/dtos/IUpdateAvatarKeyDTO';
 
 // Repositories
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
@@ -42,6 +43,25 @@ export default class UsersRepository implements IUsersRepository {
 
   public async list(): Promise<User[]> {
     return this.ormRepository.findMany();
+  }
+
+  public async update(user: User): Promise<User> {
+    return this.ormRepository.update({ where: { id: user.id }, data: user });
+  }
+
+  // Avatar Methods
+  public async updateAvatarKey({
+    userId,
+    avatarKey
+  }: IUpdateAvatarKeyDTO): Promise<User> {
+    return this.ormRepository.update({
+      where: { id: userId },
+      data: {
+        avatar: {
+          set: avatarKey,
+        },
+      },
+    });
   }
 
   // Follow Methods
