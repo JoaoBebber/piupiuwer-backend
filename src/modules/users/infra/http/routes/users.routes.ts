@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 
-import uploadConfig from '@config/upload';
+import uploadConfig from '@config/multerS3';
 
 import UsersController from '../controller/UsersController';
 import UserAvatarController from '../controller/UserAvatarController';
