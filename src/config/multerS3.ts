@@ -1,19 +1,11 @@
 import multer from 'multer';
 import multerS3 from 'multer-s3';
-import { S3Client } from '@aws-sdk/client-s3';
 import { randomBytes } from 'crypto';
+
+import s3Client from './s3Client';
 
 // Defines the maximum size of the file (8Mb)
 const AVATAR_MAX_SIZE = 8 * 1024 * 1024;
-
-// Create and configures AWS S3 Client
-const s3Client = new S3Client({
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-  },
-  region: process.env.AWS_DEFAULT_REGION,
-});
 
 const uploadConfig: multer.Options = {
   storage: multerS3({
@@ -23,6 +15,8 @@ const uploadConfig: multer.Options = {
     bucket: process.env.BUCKET_NAME as string,
     // File's content type
     contentType: multerS3.AUTO_CONTENT_TYPE,
+    // Set Access Control Lists
+    acl: 'public-read',
     // Set file's metadata
     metadata(_req, file, callback) {
       callback(null, { fieldName: file.fieldname });
