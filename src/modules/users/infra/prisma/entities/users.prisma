@@ -7,6 +7,7 @@ model User {
   username   String  @unique
   password   String
   about      String?
+  avatar     String?
 
   // Atributos relacionais do usuário
   // Users
